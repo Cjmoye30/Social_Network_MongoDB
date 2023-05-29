@@ -20,11 +20,20 @@ const thoughtSchema = new Schema({
     },
 
     // username of the user that created the thought
-    // wouldn't I need to bring in the ID of the user of this thought in order for it to be linked a lot easier? We have decent instructions but I believe we would need this in order for it to be linked up
     username: {
         type: String,
         required: true
     },
+
+        // wouldn't I need to bring in the ID of the user of this thought in order for it to be linked a lot easier? We have decent instructions but I believe we would need this in order for it to be linked up
+
+        // TBD - might not need this after all
+    userID: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'user',
+        },
+    ],
 
     //   reactions: {
     //     // array of nested documents created with the reactionSchema

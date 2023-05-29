@@ -24,6 +24,7 @@ app.get('/all-thoughts', async (req, res) => {
 
 // once everything is working correctly - then I can move them to the routes folder similar to the folder structure in the mini project
 
+// ----------------- USER ROUTES -----------------
 // GET all users - DONE
 app.get('/api/users', async (req, res) => {
   try {
@@ -41,7 +42,7 @@ app.get('/api/users/:id', async (req, res) => {
     res.status(200).json(result);
   } catch (err) {
     console.log(err)
-    res.status(500).json({ message: `Something went wrong. ${req.params.id} was not found.`})
+    res.status(500).json({ message: `Something went wrong. User ${req.params.id} was not found.`})
   }
 });
 
@@ -84,6 +85,70 @@ app.delete('/api/users/:id', async (req, res) => {
   } catch (err) {
     console.log(err)
     res.status(500).json({ message: `Something went wrong. ${req.params.id} was not removed.`})
+  }
+});
+
+
+// ----------------- THOUGHT ROUTES -----------------
+// GET all thoughts - DONE
+app.get('/api/thoughts', async (req, res) => {
+  try {
+    const result = await Thoughts.find({});
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ message: "Something went wrong. All thoughts not found." })
+  }
+});
+
+// GET single thought by _id - DONE
+app.get('/api/thoughts/:id', async (req, res) => {
+  try {
+    const result = await Thoughts.findOne({_id: req.params.id})
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: `Something went wrong. Thought ${req.params.id} was not found.`})
+  }
+});
+
+// POST create a new thought - DONE
+app.post('/api/new-thought', async (req, res) => {
+  try {
+    const newThought = await Thoughts.create(req.body);
+    console.log(newThought);
+    res.status(200).json(newThought)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: "Something went wrong. New thought not created." })
+  }
+});
+// PUT update a thought by _id
+app.post('/api/thoughts/:id', async (req, res) => {
+
+  console.log("ID: ",req.params.id)
+  console.log("Request Body: ", req.body)
+  try {
+    const result = await Thoughts.findOneAndUpdate(
+      {_id: req.params.id},
+      { $set: req.body },
+      { runValidators: true, new: true }
+      );
+      console.log(result)
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: `Something went wrong. Thought ${req.params.id} was not found.`})
+  }
+});
+
+// DELETE thought by _id
+app.delete('/api/thoughts/:id', async (req, res) => {
+  try {
+    const result = await Thoughts.findOneAndRemove({_id: req.params.id})
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: `Something went wrong. Thought ${req.params.id} was not removed.`})
   }
 });
 
