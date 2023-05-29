@@ -57,6 +57,36 @@ app.post('/api/new-user', async (req, res) => {
   }
 });
 
+// PUT to update a user by its _id - DONE
+app.post('/api/users/:id', async (req, res) => {
+
+  console.log("ID: ",req.params.id)
+  console.log("Request Body: ", req.body)
+  try {
+    const result = await User.findOneAndUpdate(
+      {_id: req.params.id},
+      { $set: req.body },
+      { runValidators: true, new: true }
+      );
+      console.log(result)
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: `Something went wrong. ${req.params.id} was not found.`})
+  }
+});
+
+// DELETE to remove a user by its _id - DONE
+app.delete('/api/users/:id', async (req, res) => {
+  try {
+    const result = await User.findOneAndRemove({_id: req.params.id})
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: `Something went wrong. ${req.params.id} was not removed.`})
+  }
+});
+
 db.once('open', () => {
   app.listen(PORT, () => {
     console.log(`API server running on port ${PORT}!`);
