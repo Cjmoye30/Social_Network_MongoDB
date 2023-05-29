@@ -1,6 +1,5 @@
 // importing mongoose
 const { Schema, model } = require('mongoose');
-const validator = require('validator');
 const { default: isEmail } = require('validator/lib/isEmail');
 
 // creating the userSchema
@@ -24,6 +23,20 @@ const userSchema = new Schema({
         validate: [isEmail, 'invalid email']
     },
 
+    thoughts: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'thought',
+        },
+    ],
+
+    friends: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'user',   
+        }
+    ]
+
 });
 
 
@@ -32,12 +45,6 @@ const handleError = (err) => console.error(err);
 
 // testing to make sure it works
 // create a new user to test it out and see if that populates in our DB
-User
-    .create({
-        username: "Cjmoye30",
-        email: "Cjmoye30@gmail.com"
-    })
-    .then(result => console.log('Created new document', result))
-    .catch(err => handleError(err));
+// comment out when working correct
 
 module.exports = User;
