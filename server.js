@@ -38,11 +38,11 @@ app.get('/api/users', async (req, res) => {
 // GET a single user by its _id and populated thought and friend data - DONE
 app.get('/api/users/:id', async (req, res) => {
   try {
-    const result = await User.findOne({_id: req.params.id})
+    const result = await User.findOne({ _id: req.params.id })
     res.status(200).json(result);
   } catch (err) {
     console.log(err)
-    res.status(500).json({ message: `Something went wrong. User ${req.params.id} was not found.`})
+    res.status(500).json({ message: `Something went wrong. User ${req.params.id} was not found.` })
   }
 });
 
@@ -61,30 +61,30 @@ app.post('/api/new-user', async (req, res) => {
 // PUT to update a user by its _id - DONE
 app.post('/api/users/:id', async (req, res) => {
 
-  console.log("ID: ",req.params.id)
+  console.log("ID: ", req.params.id)
   console.log("Request Body: ", req.body)
   try {
     const result = await User.findOneAndUpdate(
-      {_id: req.params.id},
+      { _id: req.params.id },
       { $set: req.body },
       { runValidators: true, new: true }
-      );
-      console.log(result)
+    );
+    console.log(result)
     res.status(200).json(result);
   } catch (err) {
     console.log(err)
-    res.status(500).json({ message: `Something went wrong. ${req.params.id} was not found.`})
+    res.status(500).json({ message: `Something went wrong. ${req.params.id} was not found.` })
   }
 });
 
 // DELETE to remove a user by its _id - DONE
 app.delete('/api/users/:id', async (req, res) => {
   try {
-    const result = await User.findOneAndRemove({_id: req.params.id})
+    const result = await User.findOneAndRemove({ _id: req.params.id })
     res.status(200).json(result);
   } catch (err) {
     console.log(err)
-    res.status(500).json({ message: `Something went wrong. ${req.params.id} was not removed.`})
+    res.status(500).json({ message: `Something went wrong. ${req.params.id} was not removed.` })
   }
 });
 
@@ -103,11 +103,11 @@ app.get('/api/thoughts', async (req, res) => {
 // GET single thought by _id - DONE
 app.get('/api/thoughts/:id', async (req, res) => {
   try {
-    const result = await Thoughts.findOne({_id: req.params.id})
+    const result = await Thoughts.findOne({ _id: req.params.id })
     res.status(200).json(result);
   } catch (err) {
     console.log(err)
-    res.status(500).json({ message: `Something went wrong. Thought ${req.params.id} was not found.`})
+    res.status(500).json({ message: `Something went wrong. Thought ${req.params.id} was not found.` })
   }
 });
 
@@ -137,30 +137,30 @@ app.post('/api/new-thought', async (req, res) => {
 // PUT update a thought by _id
 app.post('/api/thoughts/:id', async (req, res) => {
 
-  console.log("ID: ",req.params.id)
+  console.log("ID: ", req.params.id)
   console.log("Request Body: ", req.body)
   try {
     const result = await Thoughts.findOneAndUpdate(
-      {_id: req.params.id},
+      { _id: req.params.id },
       { $set: req.body },
       { runValidators: true, new: true }
-      );
-      console.log(result)
+    );
+    console.log(result)
     res.status(200).json(result);
   } catch (err) {
     console.log(err)
-    res.status(500).json({ message: `Something went wrong. Thought ${req.params.id} was not found.`})
+    res.status(500).json({ message: `Something went wrong. Thought ${req.params.id} was not found.` })
   }
 });
 
 // DELETE thought by _id
 app.delete('/api/thoughts/:id', async (req, res) => {
   try {
-    const result = await Thoughts.findOneAndRemove({_id: req.params.id})
+    const result = await Thoughts.findOneAndRemove({ _id: req.params.id })
     res.status(200).json(result);
   } catch (err) {
     console.log(err)
-    res.status(500).json({ message: `Something went wrong. Thought ${req.params.id} was not removed.`})
+    res.status(500).json({ message: `Something went wrong. Thought ${req.params.id} was not removed.` })
   }
 });
 
@@ -168,13 +168,12 @@ app.delete('/api/thoughts/:id', async (req, res) => {
 // CREATE a reaction stored in a single thoughts array field
 app.post('/api/thoughts/:thoughtId/reactions', async (req, res) => {
   try {
-
     // create a new reaction
     // store the new reaction in the thoughts reactions array field
     const newReaction = await Thoughts.findOneAndUpdate(
-      {_id: req.params.thoughtId},
-      {$push: {reactions: req.body}},
-      {new: true}
+      { _id: req.params.thoughtId },
+      { $push: { reactions: req.body } },
+      { new: true }
     );
 
     console.log(newReaction);
@@ -184,9 +183,26 @@ app.post('/api/thoughts/:thoughtId/reactions', async (req, res) => {
     console.log(err)
     res.status(500).json({ message: "Something went wrong. New reaction not created." })
   }
-})
+});
 
 // DELETE a reaction by the its ID value
+app.delete('/api/thoughts/:thoughtId/reactions/:reactionsId', async (req, res) => {
+
+  try {
+    const deleteReaction = await Thoughts.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $pull: { reactions: {_id: req.params.reactionsId} } },
+      { runValidators: true, new: true }
+      );
+
+    console.log(deleteReaction);
+    res.status(200).json(deleteReaction);
+
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: "Something went wrong. New reaction not created." })
+  }
+});
 
 db.once('open', () => {
   app.listen(PORT, () => {
