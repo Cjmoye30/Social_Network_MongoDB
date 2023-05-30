@@ -25,13 +25,7 @@ const userSchema = new Schema({
 
     thoughts: [{ type: Schema.Types.ObjectId, ref: 'thoughts' }],
 
-
-    friends: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'user',
-        }
-    ]
+    friends: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 
 },
     {
@@ -41,6 +35,16 @@ const userSchema = new Schema({
         id: false,
     }
 );
+
+// Virtual called friendCount which gets the length of the user's frineds array
+userSchema.virtual('friendCount').get(function () {
+    return this.friends.length;
+});
+
+// virtual to count the number of thoughts the user has
+userSchema.virtual('thoughtCount').get(function () {
+    return this.thoughts.length;
+});
 
 
 const User = model('user', userSchema);

@@ -114,11 +114,14 @@ app.get('/api/thoughts/:id', async (req, res) => {
 // POST create a new thought - TODO
 app.post('/api/new-thought', async (req, res) => {
 
-  // the thought has to be pushed into an array somewhere so that it can be accessed correctly
   try {
+    // creating a new thought based on the request body
     const newThought = await Thoughts.create(req.body);
+
+    // the thought has to be pushed into an array somewhere so that it can be accessed correctly
     const userPush = await User.findOneAndUpdate(
       { _id: req.body.userId },
+      // pushing the automatically generated id of the newly created thought into the array of the user which we defined in the body of the request in the line above.
       { $push: { thoughts: newThought._id } },
       { new: true }
     )
