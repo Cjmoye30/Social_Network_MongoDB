@@ -164,6 +164,30 @@ app.delete('/api/thoughts/:id', async (req, res) => {
   }
 });
 
+// ----------------- REACTION ROUTES -----------------
+// CREATE a reaction stored in a single thoughts array field
+app.post('/api/thoughts/:thoughtId/reactions', async (req, res) => {
+  try {
+
+    // create a new reaction
+    // store the new reaction in the thoughts reactions array field
+    const newReaction = await Thoughts.findOneAndUpdate(
+      {_id: req.params.thoughtId},
+      {$push: {reactions: req.body}},
+      {new: true}
+    );
+
+    console.log(newReaction);
+    res.status(200).json(newReaction)
+
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: "Something went wrong. New reaction not created." })
+  }
+})
+
+// DELETE a reaction by the its ID value
+
 db.once('open', () => {
   app.listen(PORT, () => {
     console.log(`API server running on port ${PORT}!`);

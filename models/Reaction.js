@@ -6,7 +6,7 @@ const reactionsSchema = new Schema({
         default: () => new Types.ObjectId
     },
 
-    reachtionBody: {
+    reactionBody: {
         type: String,
         required: true,
         maxLength: 280
@@ -22,4 +22,6 @@ const reactionsSchema = new Schema({
         default: Date.now,
         // use a getter method to format the timestamp
     },
-})
+});
+
+module.exports = reactionsSchema;

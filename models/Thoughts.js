@@ -1,5 +1,6 @@
 // importing mongoose
 const { Schema, model } = require('mongoose');
+const reactionSchema = require('./Reaction')
 
 // creating the userSchema
 const thoughtSchema = new Schema({
@@ -24,6 +25,10 @@ const thoughtSchema = new Schema({
         type: String,
         required: true,
     },
+
+    // reactions - array of nested documents created with the reaction schema
+    // this will be an embedded document - meaning that we are storing all of the data rather than just a reference of the reactionID
+    reactions: [reactionSchema]
 
 }
 
