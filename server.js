@@ -111,17 +111,26 @@ app.get('/api/thoughts/:id', async (req, res) => {
   }
 });
 
-// POST create a new thought - DONE
+// POST create a new thought - TODO
 app.post('/api/new-thought', async (req, res) => {
+
+  // the thought has to be pushed into an array somewhere so that it can be accessed correctly
   try {
     const newThought = await Thoughts.create(req.body);
+    const userPush = await User.findOneAndUpdate(
+      { _id: req.body.userId },
+      { $push: { thoughts: newThought._id } },
+      { new: true }
+    )
     console.log(newThought);
+    console.log(userPush);
     res.status(200).json(newThought)
   } catch (err) {
     console.log(err)
     res.status(500).json({ message: "Something went wrong. New thought not created." })
   }
 });
+
 // PUT update a thought by _id
 app.post('/api/thoughts/:id', async (req, res) => {
 

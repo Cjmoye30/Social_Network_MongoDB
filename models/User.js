@@ -23,28 +23,27 @@ const userSchema = new Schema({
         validate: [isEmail, 'invalid email']
     },
 
-    thoughts: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'thought',
-        },
-    ],
+    thoughts: [{ type: Schema.Types.ObjectId, ref: 'thoughts' }],
+
 
     friends: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'user',   
+            ref: 'user',
         }
     ]
 
-});
+},
+    {
+        toJSON: {
+            virtuals: true,
+        },
+        id: false,
+    }
+);
 
 
 const User = model('user', userSchema);
-const handleError = (err) => console.error(err);
 
-// testing to make sure it works
-// create a new user to test it out and see if that populates in our DB
-// comment out when working correct
 
 module.exports = User;
