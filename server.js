@@ -134,7 +134,7 @@ app.post('/api/new-thought', async (req, res) => {
   }
 });
 
-// PUT update a thought by _id
+// UPDATE a thought by _id
 app.post('/api/thoughts/:id', async (req, res) => {
 
   console.log("ID: ", req.params.id)
