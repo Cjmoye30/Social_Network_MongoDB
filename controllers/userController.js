@@ -64,4 +64,26 @@ module.exports = {
             res.status(500).json({ message: `Something went wrong. ${req.params.id} was not removed.` })
           }
     },
+
+    // ADD Friend
+    async addFriend(req, res) {
+      try {
+
+        console.log("UserId", req.params.userId);
+        console.log("FriendsId", req.params.friendsId);
+
+          // the thought has to be pushed into an array somewhere so that it can be accessed correctly
+          const newFriend = await User.findOneAndUpdate(
+              { _id: req.params.userId },
+              { $push: { friends: req.params.friendsId } },
+              { new: true }
+          )
+          console.log(newFriend);
+          res.status(200).json(newFriend)
+      } catch (err) {
+          console.log(err)
+          res.status(500).json({ message: "Something went wrong. Friend not added." })
+      }
+  },
+    // DELETE Friend
 };
