@@ -73,5 +73,44 @@ module.exports = {
             console.log(err)
             res.status(500).json({ message: `Something went wrong. Thought ${req.params.id} was not removed.` })
         }
+    },
+
+    // CREATE Reaction
+    async createReaction(req, res) {
+        try {
+            // create a new reaction
+            // store the new reaction in the thoughts reactions array field
+            const newReaction = await Thoughts.findOneAndUpdate(
+                { _id: req.params.thoughtId },
+                { $push: { reactions: req.body } },
+                { new: true }
+            );
+
+            console.log(newReaction);
+            res.status(200).json(newReaction)
+
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ message: "Something went wrong. New reaction not created." })
+        }
+
+    },
+    
+    // DELETE Reaction
+    async deleteReaction(req, res) {
+        try {
+            const deleteReaction = await Thoughts.findOneAndUpdate(
+              { _id: req.params.thoughtId },
+              { $pull: { reactions: {_id: req.params.reactionsId} } },
+              { runValidators: true, new: true }
+              );
+        
+            console.log(deleteReaction);
+            res.status(200).json(deleteReaction);
+        
+          } catch (err) {
+            console.log(err)
+            res.status(500).json({ message: "Something went wrong. New reaction not created." })
+          }
     }
 };
