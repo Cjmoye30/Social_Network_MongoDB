@@ -1,6 +1,7 @@
 // importing mongoose
 const { Schema, model } = require('mongoose');
-const reactionSchema = require('./Reaction')
+const reactionSchema = require('./Reaction');
+const moment = require('moment/moment');
 
 // creating the userSchema
 const thoughtSchema = new Schema({
@@ -16,8 +17,9 @@ const thoughtSchema = new Schema({
 
     createdAt: {
         type: Date,
-        default: Date.now,
-        // use a getter method to format the timestamp
+        default: Date.now(),
+        // call formatDate 
+        get: formatDate
     },
 
     // username of the user that created the thought
@@ -30,9 +32,21 @@ const thoughtSchema = new Schema({
     // this will be an embedded document - meaning that we are storing all of the data rather than just a reference of the reactionID
     reactions: [reactionSchema]
 
-}
+},
+    {
+        toJSON: {
+            virtuals: true,
+            getters: true
+        },
+        id: false,
+    }
 
 );
+
+// Format date with moment.js
+function formatDate (date) {
+    return moment(date).format('MMMM Do, YYYY')
+}
 
 const Thoughts = model('thoughts', thoughtSchema);
 
