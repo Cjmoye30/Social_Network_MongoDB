@@ -19,12 +19,10 @@
   - This project replicated the backend of a social media website. This site allows users to  create accouts with their chosen usernames, add thoughts(posts), and leave reactions on existing posts of other users. The database is supported by MongoDB
 
 
-  ### Screenshots: 
+  ### Walkthough/Screenshots: 
 
-  - [Video Walkthrough]()
+  - [Video Walkthrough](https://drive.google.com/file/d/1jqFqVaFJTqYlqjuuGTU_k7-NPPCHwfAn/view?usp=drive_link)
 
-  - Screenshot(s):
-  ![CLI Interface](/assets/images/09README-generator.png)
 
   ### Installation:
 
