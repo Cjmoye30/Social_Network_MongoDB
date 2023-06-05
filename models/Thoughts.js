@@ -6,7 +6,6 @@ const moment = require('moment/moment');
 // creating the userSchema
 const thoughtSchema = new Schema({
 
-    // adding in the columns/documents
     thoughtText: {
         type: String,
         unique: true,
@@ -28,8 +27,6 @@ const thoughtSchema = new Schema({
         required: true,
     },
 
-    // reactions - array of nested documents created with the reaction schema
-    // this will be an embedded document - meaning that we are storing all of the data rather than just a reference of the reactionID
     reactions: [reactionSchema]
 
 },
@@ -42,6 +39,11 @@ const thoughtSchema = new Schema({
     }
 
 );
+
+// adding in reactionsCount virtual to better show when a reaction is added/deleted for each though
+thoughtSchema.virtual('reactionCount').get(function () {
+    return this.reactions.length;
+});
 
 // Format date with moment.js
 function formatDate (date) {

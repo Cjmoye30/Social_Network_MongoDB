@@ -47,8 +47,6 @@ userSchema.virtual('thoughtCount').get(function () {
     return this.thoughts.length;
 });
 
-
 const User = model('user', userSchema);
-
 
 module.exports = User;

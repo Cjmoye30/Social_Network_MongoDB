@@ -21,7 +21,7 @@
 
   ### Walkthough/Screenshots: 
 
-  - [Video Walkthrough](https://drive.google.com/file/d/1jqFqVaFJTqYlqjuuGTU_k7-NPPCHwfAn/view?usp=drive_link)
+  - [Video Walkthrough](https://drive.google.com/file/d/1jecuTwI3YlUqxSv-f5zlImXsuxuTv6nI/view?usp=sharing)
 
 
   ### Installation:

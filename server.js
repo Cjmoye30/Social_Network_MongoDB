@@ -1,9 +1,6 @@
 const express = require('express');
 const db = require('./config/connections');
-const validator = require('validator')
 const routes = require('./routes');
-// require model
-const { User, Thoughts } = require('./models');
 
 const PORT = process.env.PORT || 3001;
 const app = express();

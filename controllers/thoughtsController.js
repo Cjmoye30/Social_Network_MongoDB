@@ -1,12 +1,11 @@
 const { Thoughts, User } = require('../models');
 
-// any aggregate functions here:
-
 module.exports = {
     // GET all thoughts
     async getThoughts(req, res) {
         try {
             const result = await Thoughts.find({});
+            console.log("-----------All Thoughts-----------:", result)
             res.status(200).json(result);
         } catch (err) {
             res.status(500).json({ message: "Something went wrong. All thoughts not found." })
@@ -17,6 +16,7 @@ module.exports = {
     async getSingleThought(req, res) {
         try {
             const result = await Thoughts.findOne({ _id: req.params.thoughtId })
+            console.log("Single thought:", result)
             res.status(200).json(result);
         } catch (err) {
             console.log(err)
@@ -30,15 +30,13 @@ module.exports = {
             // creating a new thought based on the request body
             const newThought = await Thoughts.create(req.body);
 
-            // the thought has to be pushed into an array somewhere so that it can be accessed correctly
             const userPush = await User.findOneAndUpdate(
                 { _id: req.body.userId },
                 // pushing the automatically generated id of the newly created thought into the array of the user which we defined in the body of the request in the line above.
                 { $push: { thoughts: newThought._id } },
                 { new: true }
             )
-            console.log(newThought);
-            console.log(userPush);
+            console.log(`New thought created and added to ${req.body.userId}`, newThought);
             res.status(200).json(newThought)
         } catch (err) {
             console.log(err)
@@ -48,16 +46,13 @@ module.exports = {
 
     // UPDATE thought
     async updateThought(req, res) {
-
-        console.log("ID: ", req.params.thoughtId);
-        console.log("Request Body: ", req.body);
         try {
             const result = await Thoughts.findOneAndUpdate(
                 { _id: req.params.thoughtId },
                 { $set: req.body },
                 { runValidators: true, new: true }
             );
-            console.log(result)
+            console.log(`${req.params.thoughtId} updated.`, result)
             res.status(200).json(result);
         } catch (err) {
             console.log(err)
@@ -68,6 +63,7 @@ module.exports = {
     async deleteThought(req, res) {
         try {
             const result = await Thoughts.findOneAndRemove({ _id: req.params.thoughtId })
+            console.log(`${req.params.thoughtId} deleted.`)
             res.status(200).json(result);
         } catch (err) {
             console.log(err)
@@ -75,6 +71,7 @@ module.exports = {
         }
     },
 
+    // ---------------------------- REACTIONS Routes ---------------------------- 
     // CREATE Reaction
     async createReaction(req, res) {
         try {
@@ -86,7 +83,7 @@ module.exports = {
                 { new: true }
             );
 
-            console.log(newReaction);
+            console.log(`New reaction added to ${req.params.thoughtId}`,newReaction);
             res.status(200).json(newReaction)
 
         } catch (err) {
@@ -95,22 +92,22 @@ module.exports = {
         }
 
     },
-    
+
     // DELETE Reaction
     async deleteReaction(req, res) {
         try {
             const deleteReaction = await Thoughts.findOneAndUpdate(
-              { _id: req.params.thoughtId },
-              { $pull: { reactions: {_id: req.params.reactionsId} } },
-              { runValidators: true, new: true }
-              );
-        
-            console.log(deleteReaction);
+                { _id: req.params.thoughtId },
+                { $pull: { reactions: { _id: req.params.reactionsId } } },
+                { runValidators: true, new: true }
+            );
+
+            console.log(`${req.params.thoughtId} deleted:`,deleteReaction);
             res.status(200).json(deleteReaction);
-        
-          } catch (err) {
+
+        } catch (err) {
             console.log(err)
             res.status(500).json({ message: "Something went wrong. New reaction not deleted." })
-          }
+        }
     }
 };

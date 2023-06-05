@@ -1,12 +1,11 @@
 const { User } = require('../models');
-// any aggregate functions here:
 
-// Routes
 module.exports = {
   // GET all users
   async getUsers(req, res) {
     try {
       const result = await User.find({});
+      console.log("-----------All Users-----------:", result)
       res.status(200).json(result);
     } catch (err) {
       res.status(500).json({ message: "Something went wrong. All users not found." })
@@ -17,6 +16,7 @@ module.exports = {
   async getSingleUser(req, res) {
     try {
       const result = await User.findOne({ _id: req.params.userId })
+      console.log("Single user:", result)
       res.status(200).json(result);
     } catch (err) {
       console.log(err)
@@ -28,7 +28,7 @@ module.exports = {
   async createUser(req, res) {
     try {
       const newUser = await User.create(req.body);
-      console.log(newUser);
+      console.log("New user created:",newUser);
       res.status(200).json(newUser)
     } catch (err) {
       console.log(err)
@@ -38,15 +38,13 @@ module.exports = {
 
   // UPDATE user
   async updateUser(req, res) {
-    console.log("ID: ", req.params.id)
-    console.log("Request Body: ", req.body)
     try {
       const result = await User.findOneAndUpdate(
         { _id: req.params.userId },
         { $set: req.body },
         { runValidators: true, new: true }
       );
-      console.log(result)
+      console.log(`${result.username} updated.`, result)
       res.status(200).json(result);
     } catch (err) {
       console.log(err)
@@ -58,6 +56,7 @@ module.exports = {
   async deleteUser(req, res) {
     try {
       const result = await User.findOneAndRemove({ _id: req.params.userId })
+      console.log(`${req.params.userId} deleted.`)
       res.status(200).json(result);
     } catch (err) {
       console.log(err)
@@ -65,20 +64,16 @@ module.exports = {
     }
   },
 
+  // ---------------------------- FRIEND Routes ---------------------------- 
   // ADD Friend
   async addFriend(req, res) {
     try {
-
-      console.log("UserId", req.params.userId);
-      console.log("FriendsId", req.params.friendsId);
-
-      // the thought has to be pushed into an array somewhere so that it can be accessed correctly
       const newFriend = await User.findOneAndUpdate(
         { _id: req.params.userId },
         { $push: { friends: req.params.friendsId } },
         { new: true }
       )
-      console.log(newFriend);
+      console.log(`${req.params.friendsId} added as a friend to ${req.params.userId}`)
       res.status(200).json(newFriend)
     } catch (err) {
       console.log(err)
@@ -94,7 +89,7 @@ module.exports = {
         { runValidators: true, new: true }
       );
 
-      console.log(result);
+      console.log(`${req.params.friendsId} removed as a friend from ${req.params.userId}`)
       res.status(200).json(result);
 
     } catch (err) {
